@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-current;
+  }
+}
+
+@layer utilities {
+   .text-balance {
+    text-wrap: balance;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 2px; /* Width of the scrollbar */
+  height: 2px;
+}
+
+/* Handle on the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #aaaaaa; /* Color of the thumb */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa; /* Color of the thumb on hover */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.25); /* Color of the track */
+}
+
+/* Track on hover */
+::-webkit-scrollbar-track:hover {
+  background: #ddd; /* Color of the track on hover */
+}
