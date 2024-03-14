@@ -91,14 +91,12 @@ export default function Home() {
 
     socket.onmessage = (event) => {
       const progress = JSON.parse(event.data)
-      // setPercentage(progress.percentage)
       toast.update(deployToast, {render: `${progress.message}`, isLoading: true, autoClose: 2000});
     }
 
     socket.onclose = () => {
       setIsDeploying(false)
       toast.update(deployToast, {render: "finish", type: "success", isLoading: false, autoClose: 2000});
-      // setPercentage(0)
     }
 
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/deploy`, formData, {
