@@ -4,8 +4,14 @@ import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 import Bar from '@/components/bar';
 import { CloudUploadOutlined } from '@mui/icons-material';
 import { VisuallyHiddenInput } from '@/components/helper';
+import { verify } from '@/components/functions';
+
 
 export default function Home() {
+
+  React.useEffect(() => {
+    verify()
+  }, [])
 
   return (
     <>

@@ -24,7 +24,7 @@ const Menu: React.FC<Component> = ({ username }) => {
         </Link>
         <List className="p-3">
           <Paper elevation={1} className="m-2">
-            <Link href="/v1/user" underline="none" color={'white'}>
+            <Link href="/user" underline="none" color={'white'}>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -36,13 +36,13 @@ const Menu: React.FC<Component> = ({ username }) => {
             </Link>
           </Paper>
           <Paper elevation={1} className="m-2">
-            <Link href="/v1/admin" underline="none" color={'white'}>
+            <Link href="/admin" underline="none" color={'white'}>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
                     <ManageAccountsOutlinedIcon sx={{ color: '#1890ff' }} />
                   </ListItemIcon>
-                  <ListItemText primary="Management" />
+                  <ListItemText primary="Administrator" />
                 </ListItemButton>
               </ListItem>
             </Link>
