@@ -4,12 +4,12 @@ import { Drawer } from "@mui/material"
 import Menu from '@/components/menu';
 
 interface Component {
-  // user: object,
+  username: string,
   open: boolean
   handleChange: () => void
 }
 
-const SideMenu: React.FC<Component> = ({ open, handleChange}) => {
+const SideMenu: React.FC<Component> = ({ open, handleChange, username}) => {
 
   return (
     <Drawer
@@ -17,7 +17,7 @@ const SideMenu: React.FC<Component> = ({ open, handleChange}) => {
         open={open}
         onClose={handleChange}
       >
-        <Menu username={'matheus'} />
+        <Menu username={username} />
     </Drawer>
   )
 }

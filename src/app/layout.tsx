@@ -6,6 +6,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ThemeProvider } from "@mui/material/styles";
+import ToastProvider from "./toaster";
 import "./globals.css";
 import { darkTheme } from "./theme";
 
@@ -24,7 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ThemeProvider theme={darkTheme}>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+          </body>
       </ThemeProvider>
     </html>
   );

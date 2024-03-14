@@ -1,7 +1,10 @@
 'use client'
 import React from 'react'
-import { Box, Button, ButtonGroup, FormControl, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, Paper } from '@mui/material'
+import { Box, Button, ButtonGroup, FormControl, IconButton, Input, InputAdornment, InputLabel, Paper } from '@mui/material'
 import { PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Bounce, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation'
+import axios from 'axios';
 
 interface LoginForm {
   username: string;
@@ -9,31 +12,41 @@ interface LoginForm {
 }
 
 export default function Login() {
-  const [formData, setFormData] = React.useState<LoginForm>({username: '', password: ''})
+  const [formData, setFormData] = React.useState<LoginForm>({ username: '', password: '' })
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const router = useRouter()
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
-  const handleSubmit = async () => {
-    console.log(formData)
-    const response = await fetch('http://127.0.0.1:8000/login', {
-      method: 'POST',
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, formData, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData)
+    }).then(response => {
+      if (response.status == 200) {
+        sessionStorage.setItem('user', JSON.stringify(response.data.user))
+        sessionStorage.setItem('token', response.data.token)
+        router.push("/")
+      }
+    }).catch(error => {
+      console.error(error.data)
+      toast.error('Invalid Credentials', {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
     })
-    console.log(response)
-    if(response.ok) {
-      console.log('login')
-    } else {
-      console.error('failed')
-    }
-
   }
 
   return (
@@ -42,47 +55,49 @@ export default function Login() {
         <Box className="col-6 d-flex justify-content-center">
           <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Paper elevation={3}>
-              <Box component="form" id="login-form" onSubmit={handleSubmit} className="m-2 p-2" sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
-              }}>
-                <Box className="text-center">Login</Box>
-                <FormControl className="col-12 p-2" variant="standard">
-                  <InputLabel className="ml-2 p-2" htmlFor="outlined-adornment-username">Username</InputLabel>
-                  <Input
-                    onChange={(e) => setFormData({...formData, username: e.target.value})}
-                    id="outlined-adornment-username"
-                    type={'text'}
-                    endAdornment={
-                      <InputAdornment position="start">
-                        <PersonOutline />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-                <Box>
+              <Box component={"form"} method='post' onSubmit={(e) => handleSubmit(e)}>
+                <Box className="m-2 p-2" sx={{
+                  '& .MuiTextField-root': { m: 1, width: '25ch' },
+                }}>
+                  <Box className="text-center">Login</Box>
                   <FormControl className="col-12 p-2" variant="standard">
-                    <InputLabel className="ml-2 p-2" htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <InputLabel className="ml-2 p-2" htmlFor="outlined-adornment-username">Username</InputLabel>
                     <Input
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      id="outlined-adornment-password"
-                      type={showPassword ? 'text' : 'password'}
+                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                      id="outlined-adornment-username"
+                      type={'text'}
                       endAdornment={
                         <InputAdornment position="start">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
+                          <PersonOutline />
                         </InputAdornment>
                       }
                     />
                   </FormControl>
-                  <ButtonGroup className="col-12 ms-auto p-2 justify-content-center align-items-center">
-                  <Button type='submit' color='success'>Login</Button>
-                  </ButtonGroup>
+                  <Box>
+                    <FormControl className="col-12 p-2" variant="standard">
+                      <InputLabel className="ml-2 p-2" htmlFor="outlined-adornment-password">Password</InputLabel>
+                      <Input
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        id="outlined-adornment-password"
+                        type={showPassword ? 'text' : 'password'}
+                        endAdornment={
+                          <InputAdornment position="start">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
+                    <ButtonGroup className="col-12 ms-auto p-2 justify-content-center align-items-center">
+                      <Button type='submit' color='success'>Login</Button>
+                    </ButtonGroup>
+                  </Box>
                 </Box>
               </Box>
             </Paper>

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper } from '@mui/material'
+import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
@@ -8,12 +8,67 @@ import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { Bounce, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 interface Component {
   username: string
 }
 
 const Menu: React.FC<Component> = ({ username }) => {
+  const router = useRouter();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const logout = () => {
+    sessionStorage.clear();
+    router.push("/login")
+  }
+
+  const docker = async () => {
+    const token = sessionStorage.getItem('token')
+
+    await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/restart`, {
+      headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      console.log('got here')
+      toast.success(response.data.message, {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+        });
+    }).catch(error => {
+      toast.error('Couldn\'t restart tomcat', {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    })
+  }
+
   return (
     <Box className="container">
       <Box className="d-flex flex-column">
@@ -59,7 +114,7 @@ const Menu: React.FC<Component> = ({ username }) => {
           </Paper>
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={docker}>
                 <ListItemIcon>
                   <RestartAltOutlinedIcon sx={{ color: '#1890ff' }} />
                 </ListItemIcon>
@@ -89,7 +144,7 @@ const Menu: React.FC<Component> = ({ username }) => {
           </Paper>
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={handleClickOpen}>
                 <ListItemIcon>
                   <LogoutOutlinedIcon sx={{ color: '#1890ff' }} />
                 </ListItemIcon>
@@ -99,6 +154,27 @@ const Menu: React.FC<Component> = ({ username }) => {
           </Paper>
         </List>
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Logging out"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            this will disconnect you and turn off your tomcat instance
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={logout} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
