@@ -11,11 +11,10 @@ import axios from 'axios';
 import { Bounce, toast } from 'react-toastify';
 
 export default function Home() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
+  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
   const [token, setToken] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [streamLog, setStreamLog] = React.useState('');
-  const [isDeploying, setIsDeploying] = React.useState(false);
   const textFieldRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
@@ -86,7 +85,6 @@ export default function Home() {
     formData.append('filename', name)
 
     socket.onopen = () => {
-      setIsDeploying(true)
     }
 
     socket.onmessage = (event) => {
@@ -95,7 +93,6 @@ export default function Home() {
     }
 
     socket.onclose = () => {
-      setIsDeploying(false)
       toast.update(deployToast, {render: "finish", type: "success", isLoading: false, autoClose: 2000});
     }
 

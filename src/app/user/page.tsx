@@ -8,7 +8,7 @@ import Loading from '@/components/loading';
 import UserForm from '@/components/userForm';
 
 export default function User() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
+  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
