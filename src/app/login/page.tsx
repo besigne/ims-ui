@@ -2,7 +2,7 @@
 import React from 'react'
 import { Box, Button, ButtonGroup, FormControl, IconButton, Input, InputAdornment, InputLabel, Paper } from '@mui/material'
 import { PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material';
-import { Bounce, toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'
 import axios from 'axios';
 
@@ -44,7 +44,7 @@ export default function Login() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        transition: Bounce,
+        transition: Slide,
       });
     })
   }

@@ -8,15 +8,16 @@ import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { Bounce, toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { User } from './interface';
 import axios from 'axios';
 
 interface Component {
-  username: string
+  user: User
 }
 
-const Menu: React.FC<Component> = ({ username }) => {
+const Menu: React.FC<Component> = ({ user }) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
@@ -34,38 +35,28 @@ const Menu: React.FC<Component> = ({ username }) => {
   }
 
   const docker = async () => {
+    const tomcatToast = toast.loading('restarting', {
+      position: "top-left",
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
+    })
+
     const token = sessionStorage.getItem('token')
 
     await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/restart`, {
       headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json'
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
       }
     }).then(response => {
-      console.log('got here')
-      toast.success(response.data.message, {
-        position: "top-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        });
+      toast.update(tomcatToast, { render: `${response.data.message}`, type: 'success', isLoading: false, autoClose: 2000 });
     }).catch(error => {
-      toast.error('Couldn\'t restart tomcat', {
-        position: "top-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-      });
+      toast.update(tomcatToast, { render: 'Couldn\'t restart tomcat', type: 'warning', isLoading: false, autoClose: 2000 });
     })
   }
 
@@ -85,23 +76,25 @@ const Menu: React.FC<Component> = ({ username }) => {
                   <ListItemIcon>
                     <PersonOutlineOutlinedIcon sx={{ color: '#1890ff' }} />
                   </ListItemIcon>
-                  <ListItemText primary={username} />
+                  <ListItemText primary={user.username} />
                 </ListItemButton>
               </ListItem>
             </Link>
           </Paper>
-          <Paper elevation={1} className="m-2">
-            <Link href="/admin" underline="none" color={'white'}>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <ManageAccountsOutlinedIcon sx={{ color: '#1890ff' }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Administrator" />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          </Paper>
+          {user.is_staff ?
+            <Paper elevation={1} className="m-2">
+              <Link href="/admin" underline="none" color={'white'}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <ManageAccountsOutlinedIcon sx={{ color: '#1890ff' }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Administrator" />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Paper>
+            : null}
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
               <ListItemButton disabled={true}>

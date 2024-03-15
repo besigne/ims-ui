@@ -23,7 +23,7 @@ export default function User() {
     <>
       {!loading ?
         <Box className="container">
-          <Bar title={'Administrator settings'} user={user.username} />
+          <Bar title={'User settings'} user={user} />
           <Box className="m-4 p-2 d-flex justify-content-center">
             <UserForm user={user} />
           </Box>

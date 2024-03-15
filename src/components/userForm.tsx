@@ -2,7 +2,9 @@
 import React from 'react'
 import { User } from './interface'
 import { Box, FormControl, InputLabel, Paper, Input, InputAdornment, IconButton, Button } from '@mui/material'
-import { EmailOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
+import { EmailOutlined, ManageAccounts, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
+import axios from 'axios'
+import { Slide, toast } from 'react-toastify'
 
 interface Component {
   user: User
@@ -11,7 +13,7 @@ interface Component {
 interface Form {
   username: string,
   password: string,
-  email: string
+  email: string,
 }
 
 const UserForm: React.FC<Component> = ({ user }) => {
@@ -22,6 +24,35 @@ const UserForm: React.FC<Component> = ({ user }) => {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
+  const handleSubmit = async () => {
+    const token = sessionStorage.getItem('token')
+    const userToast = toast.loading('saving', {
+      position: "top-left",
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
+    })
+
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/${user.first_name}/${user.id}/`, form, {
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      setTimeout(() => {
+        toast.update(userToast, { render: `Saved ${user.first_name} successfully`, type: "success", isLoading: false, autoClose: 2000 })
+      }, 1000);
+    }).catch(error => {
+      setTimeout(() => {
+        toast.update(userToast, { render: `Couldn't update ${user.first_name}`, type: "warning", isLoading: false, autoClose: 2000 })
+      }, 1000);
+    })
+  }
 
   return (
     <Paper className='col-3 d-flex justify-content-center align-items-center'>
@@ -63,22 +94,20 @@ const UserForm: React.FC<Component> = ({ user }) => {
             value={form.password}
             endAdornment={
               <InputAdornment position="start">
-               <InputAdornment position="start">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
               </InputAdornment>
             }
           />
         </FormControl>
         <Box className="d-flex p-2 justify-content-center align-items-center">
-          <Button>Save Changes</Button>
+          <Button onClick={handleSubmit}>Save Changes</Button>
         </Box>
       </Box>
     </Paper>

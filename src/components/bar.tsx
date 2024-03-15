@@ -2,10 +2,11 @@
 import React from 'react'
 import SideMenu from '@/components/sidemenu';
 import { Box, Button, Typography } from '@mui/material'
+import { User } from './interface';
 
 interface Component {
   title: string,
-  user: string
+  user: User
 }
 
 const Bar: React.FC<Component> = ({title = "", user}) => {
@@ -28,7 +29,7 @@ const Bar: React.FC<Component> = ({title = "", user}) => {
           <Button variant='text' onClick={handleStatusDrawer} color="info">Menu</Button>
         </Box>
       </Box>
-      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} username={user} />
+      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} />
     </>
   )
 }

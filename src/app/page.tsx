@@ -8,7 +8,7 @@ import { User } from '@/components/interface';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
 import axios from 'axios';
-import { Bounce, toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 
 export default function Home() {
   const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
@@ -73,13 +73,13 @@ export default function Home() {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${user.first_name}/`)
     const deployToast = toast.loading('starting', {
       position: "top-left",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
     })
     const formData = new FormData();
     formData.append('filename', name)
@@ -89,11 +89,11 @@ export default function Home() {
 
     socket.onmessage = (event) => {
       const progress = JSON.parse(event.data)
-      toast.update(deployToast, {render: `${progress.message}`, isLoading: true, autoClose: 2000});
+      toast.update(deployToast, { render: `${progress.message}`, isLoading: true, autoClose: 2000 });
     }
 
     socket.onclose = () => {
-      toast.update(deployToast, {render: "finish", type: "success", isLoading: false, autoClose: 2000});
+      toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
     }
 
     axios.post(`${process.env.NEXT_PUBLIC_API_URL}/deploy`, formData, {
@@ -110,7 +110,7 @@ export default function Home() {
     <>
       {!loading ?
         <Box className="container">
-          <Bar title={'Integration Management System'} user={user.username} />
+          <Bar title={'Integration Management System'} user={user} />
           <Box className="m-2 p-2 d-flex justify-content-center">
             <Box className="col-6 d-flex justify-content-center">
               <Paper elevation={3}>
