@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
+import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Divider } from '@mui/material'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
@@ -11,15 +11,22 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Slide, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { User } from './interface';
-import axios from 'axios';
+import { ContentCopy } from '@mui/icons-material';
+import Loading from './loading';
+import api from '@/app/api';
 
 interface Component {
-  user: User
+  user: User,
+  logout: () => void
 }
 
-const Menu: React.FC<Component> = ({ user }) => {
+const Menu: React.FC<Component> = ({ user, logout }) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [loadingCred, setLoadingCred] = React.useState(true);
+  const [databaseUser, setDatabaseUser] = React.useState('');
+  const [databasePwd, setDatabasePwd] = React.useState('');
+  const [databaseDialog, setDatabaseDialog] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,9 +36,16 @@ const Menu: React.FC<Component> = ({ user }) => {
     setOpen(false);
   };
 
-  const logout = () => {
-    sessionStorage.clear();
-    router.push("/login")
+  const handleDatabaseDialog = () => {
+    if(!databaseDialog) {
+      setLoadingCred(true)
+      databaseCredentials()
+    }
+    setDatabaseDialog(!databaseDialog)
+  }
+
+  const copyToClipboard = (variable: string) => {
+    navigator.clipboard.writeText(variable)
   }
 
   const docker = async () => {
@@ -48,17 +62,31 @@ const Menu: React.FC<Component> = ({ user }) => {
 
     const token = sessionStorage.getItem('token')
 
-    await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/restart`, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    await api.get('/restart').then(response => {
       toast.update(tomcatToast, { render: `${response.data.message}`, type: 'success', isLoading: false, autoClose: 2000 });
     }).catch(error => {
       toast.update(tomcatToast, { render: 'Couldn\'t restart tomcat', type: 'warning', isLoading: false, autoClose: 2000 });
     })
   }
+
+  const databaseCredentials = async () => {
+
+    await api.get('/credentials').then(response => {
+      setDatabaseUser(response.data[0].user)
+      setDatabasePwd(response.data[0].password)
+      setLoadingCred(false)
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  // const logout = (username: string) => {
+  //   const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
+  //   socket.close()
+  //   sessionStorage.clear()
+  //   api.post('/logout')
+  //   router.push('/login')
+  // }
 
   return (
     <Box className="container">
@@ -117,7 +145,7 @@ const Menu: React.FC<Component> = ({ user }) => {
           </Paper>
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={handleDatabaseDialog}>
                 <ListItemIcon>
                   <StorageOutlinedIcon sx={{ color: '#1890ff' }} />
                 </ListItemIcon>
@@ -165,6 +193,41 @@ const Menu: React.FC<Component> = ({ user }) => {
           <Button onClick={handleClose}>No</Button>
           <Button onClick={logout} autoFocus>
             Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={databaseDialog}
+        onClose={handleDatabaseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-database"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Database credentials"}
+        </DialogTitle>
+        {!loadingCred ?
+          <DialogContent>
+            <DialogContentText id="alert-dialog-database-username"
+              className="d-flex align-items-center"
+            >
+              User: {databaseUser}
+              <IconButton className="ml-auto" onClick={() => copyToClipboard(databaseUser)}>
+                <ContentCopy />
+              </IconButton>
+            </DialogContentText>
+            <Divider />
+            <DialogContentText id="alert-dialog-database-password"
+              className="d-flex align-items-center"
+            >
+              Pwd: {databasePwd}
+              <IconButton className="ml-auto" onClick={() => copyToClipboard(databasePwd)}>
+                <ContentCopy />
+              </IconButton>
+            </DialogContentText>
+          </DialogContent> : <Loading />}
+        <DialogActions>
+          <Button onClick={handleDatabaseDialog} autoFocus>
+            Done
           </Button>
         </DialogActions>
       </Dialog>

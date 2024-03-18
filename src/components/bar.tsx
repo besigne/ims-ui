@@ -6,10 +6,11 @@ import { User } from './interface';
 
 interface Component {
   title: string,
-  user: User
+  user: User,
+  logout: () => void,
 }
 
-const Bar: React.FC<Component> = ({title = "", user}) => {
+const Bar: React.FC<Component> = ({title = "", user, logout}) => {
   const [statusDrawer, setStatusDrawer] = React.useState(false);
 
   const handleStatusDrawer = () => {
@@ -29,7 +30,7 @@ const Bar: React.FC<Component> = ({title = "", user}) => {
           <Button variant='text' onClick={handleStatusDrawer} color="info">Menu</Button>
         </Box>
       </Box>
-      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} />
+      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} logout={logout} />
     </>
   )
 }

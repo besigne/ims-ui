@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { User } from './interface';
-import { GridCellParams } from '@mui/x-data-grid';
 
 export const verify = () => {
   const token = sessionStorage.getItem('token')

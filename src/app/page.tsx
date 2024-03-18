@@ -4,11 +4,13 @@ import { Box, Button, LinearProgress, Paper, TextField, Typography } from '@mui/
 import { CloudUploadOutlined } from '@mui/icons-material';
 import { VisuallyHiddenInput } from '@/components/helper';
 import { convertUser, verify } from '@/components/functions';
+import { Slide, toast } from 'react-toastify';
 import { User } from '@/components/interface';
+import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
 import axios from 'axios';
-import { Slide, toast } from 'react-toastify';
+import api from './api';
 
 export default function Home() {
   const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
@@ -16,16 +18,26 @@ export default function Home() {
   const [loading, setLoading] = React.useState(true);
   const [streamLog, setStreamLog] = React.useState('');
   const textFieldRef = React.useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   React.useEffect(() => {
     verify()
     setUser(convertUser())
     setToken(sessionStorage.getItem('token'))
+
     if (user.id != 0) {
-      setLoading(false)
       handleSocket(user.id, user.first_name)
+      setLoading(false)
     }
   }, [user.id != 0])
+
+  const logout = (username: string) => {
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
+    socket.close()
+    sessionStorage.clear()
+    api.post('/logout')
+    router.push('/login')
+  }
 
   React.useEffect(() => {
     if (textFieldRef.current) {
@@ -110,7 +122,7 @@ export default function Home() {
     <>
       {!loading ?
         <Box className="container">
-          <Bar title={'Integration Management System'} user={user} />
+          <Bar title={'Integration Management System'} user={user} logout={() => logout(user.first_name)} />
           <Box className="m-2 p-2 d-flex justify-content-center">
             <Box className="col-6 d-flex justify-content-center">
               <Paper elevation={3}>
