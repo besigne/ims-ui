@@ -3,8 +3,10 @@ import React from 'react'
 import { Box, Button, ButtonGroup, FormControl, IconButton, Input, InputAdornment, InputLabel, Paper } from '@mui/material'
 import { PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material';
 import { Slide, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import { useCookies } from 'next-client-cookies';
 import axios from 'axios';
+import api from '../api';
 
 interface LoginForm {
   username: string;
@@ -15,6 +17,8 @@ export default function Login() {
   const [formData, setFormData] = React.useState<LoginForm>({ username: '', password: '' })
   const [showPassword, setShowPassword] = React.useState(false);
   const router = useRouter()
+  const cookies = useCookies()
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -23,18 +27,18 @@ export default function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, formData, {
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login/`, formData, {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(response => {
+    })
+    .then(response => {
       if (response.status == 200) {
         sessionStorage.setItem('user', JSON.stringify(response.data.user))
-        sessionStorage.setItem('token', response.data.token)
         router.push("/")
       }
     }).catch(error => {
-      console.error(error.data)
+      console.error(error)
       toast.error('Invalid Credentials', {
         position: "top-left",
         autoClose: 5000,

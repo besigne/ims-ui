@@ -1,16 +1,18 @@
 'use client'
 import React from 'react'
 import { Box, Button, Modal, Paper } from '@mui/material'
-import Bar from '@/components/bar';
 import { convertGridUser, convertUser, verify } from '@/components/functions';
-import { User } from '@/components/interface';
-import Loading from '@/components/loading';
-import { columns } from '@/components/helper';
 import { DataGrid, GridCellParams, GridPagination } from '@mui/x-data-grid';
-import axios from 'axios';
+import CreateUserForm from '@/components/createUserForm';
 import { PersonAddOutlined } from '@mui/icons-material';
 import AdminUserForm from '@/components/adminUserForm';
-import CreateUserForm from '@/components/createUserForm';
+import { columns } from '@/components/helper';
+import { User } from '@/components/interface';
+import { useRouter } from 'next/navigation';
+import Loading from '@/components/loading';
+import Bar from '@/components/bar';
+import axios from 'axios';
+import api from '../api';
 
 interface UserData {
   id: number;
@@ -29,6 +31,7 @@ export default function Admin() {
   const [row, setRow] = React.useState<UserData[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isCreateOpen, setIsCreateOpen] = React.useState(false);
+  const router = useRouter();
 
   React.useEffect(() => {
     verify()
@@ -73,6 +76,14 @@ export default function Admin() {
     userList()
   }
 
+  const logout = (username: string) => {
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
+    socket.close()
+    sessionStorage.clear()
+    api.post('/logout')
+    router.push('/login')
+  }
+
   return (
     <>
       {!loading ?
@@ -95,7 +106,7 @@ export default function Admin() {
               <CreateUserForm />
             </Box>
           </Modal>
-          <Bar title={'Administrator settings'} user={user} />
+          <Bar title={'Administrator settings'} user={user} logout={() => logout(user.first_name)} />
           <Box className="m-4 p-2 d-flex justify-content-center">
             <Paper className='col-9 d-flex justify-content-center align-items-center'>
               <DataGrid

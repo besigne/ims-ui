@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { User } from './interface';
 
 export const verify = () => {
-  const token = sessionStorage.getItem('token')
+  const token = sessionStorage.getItem('user')
   if (!token) {
     redirect('/login');
   }

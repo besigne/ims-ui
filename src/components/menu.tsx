@@ -62,7 +62,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
 
     const token = sessionStorage.getItem('token')
 
-    await api.get('/restart').then(response => {
+    await api.post('/restart/').then(response => {
       toast.update(tomcatToast, { render: `${response.data.message}`, type: 'success', isLoading: false, autoClose: 2000 });
     }).catch(error => {
       toast.update(tomcatToast, { render: 'Couldn\'t restart tomcat', type: 'warning', isLoading: false, autoClose: 2000 });
@@ -71,7 +71,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
 
   const databaseCredentials = async () => {
 
-    await api.get('/credentials').then(response => {
+    await api.get('/credentials/').then(response => {
       setDatabaseUser(response.data[0].user)
       setDatabasePwd(response.data[0].password)
       setLoadingCred(false)
@@ -153,7 +153,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
               </ListItemButton>
             </ListItem>
           </Paper>
-          <Paper elevation={1} className="m-2">
+          {/* <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -162,7 +162,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
                 <ListItemText primary="History" />
               </ListItemButton>
             </ListItem>
-          </Paper>
+          </Paper> */}
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
               <ListItemButton onClick={handleClickOpen}>

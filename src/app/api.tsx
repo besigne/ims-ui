@@ -1,14 +1,15 @@
 'use client'
 import axios from "axios";
 
-const token = getToken()
+// const cookies = getCookies()
+const cookies = ''
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
-    'Authorization': `Token ${token}`,
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true
 })
 
 export default api;
