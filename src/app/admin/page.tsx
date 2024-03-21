@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
 import axios from 'axios';
-import api from '../api';
+// import api, { postData } from '../api';
 
 interface UserData {
   id: number;
@@ -43,18 +43,14 @@ export default function Admin() {
   }, [user.id != 0])
 
   const userList = async () => {
-    const token = sessionStorage.getItem('token')
 
-    await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user_list`, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-      Object.keys(response.data.users).forEach(key => {
-        setRow(row => [...row, response.data.users[key]])
-      })
-    })
+    // await api.get(`/admin/user/`).then(response => {
+    //   if (response.data.users) {
+    //     Object.keys(response.data.users).forEach(key => {
+    //       setRow(row => [...row, response.data.users[key]])
+    //     })
+    //   }
+    // })
   }
 
   const handleUserModal = () => {
@@ -80,7 +76,6 @@ export default function Admin() {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
     socket.close()
     sessionStorage.clear()
-    api.post('/logout')
     router.push('/login')
   }
 

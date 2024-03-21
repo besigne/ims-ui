@@ -1,24 +1,50 @@
 'use client'
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useRouter } from 'next/router';
 
-// const cookies = getCookies()
-const cookies = ''
+function getCSRFToken() {
+  if (typeof window !== 'undefined') {
+    if (typeof document !== 'undefined') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+          return value;
+        }
+      }
+      return '';
+    }
+  }
+}
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: "X-CSRFTOKEN",
+  withCredentials: true,
+  withXSRFToken: true,
   headers: {
     'Content-Type': 'application/json',
-  },
-  withCredentials: true
+    'X-CSRFToken': getCSRFToken()
+  }
 })
 
-export default api;
+export async function postData(url: string, data: any,onSuccess: () => void, onError: () => void) {
+  const router = useRouter();
 
-export function getToken() {
-  if (typeof window === 'undefined') {
-    return null;
+  try {
+    const response = await api.post(url, data);
+    
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if(axiosError.response && axiosError.response.status === 403) {
+        router.push('/login');
+      }
+    }
+  } finally {
+
   }
-
-  const token = sessionStorage.getItem('token');
-  return token;
 }
+
