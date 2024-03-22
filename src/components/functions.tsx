@@ -1,12 +1,4 @@
-import { redirect } from 'next/navigation';
 import { User } from './interface';
-
-export const verify = () => {
-  const token = sessionStorage.getItem('user')
-  if (!token) {
-    redirect('/login');
-  }
-}
 
 export const convertUser = () => {
   const stored = sessionStorage.getItem('user');

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { Box, Button, Modal, Paper } from '@mui/material'
-import { convertGridUser, convertUser, verify } from '@/components/functions';
+import { convertGridUser, convertUser } from '@/components/functions';
 import { DataGrid, GridCellParams, GridPagination } from '@mui/x-data-grid';
 import CreateUserForm from '@/components/createUserForm';
 import { PersonAddOutlined } from '@mui/icons-material';
@@ -11,8 +11,8 @@ import { User } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
-import axios from 'axios';
-// import api, { postData } from '../api';
+import api from '../api';
+import { Slide, toast } from 'react-toastify';
 
 interface UserData {
   id: number;
@@ -34,23 +34,32 @@ export default function Admin() {
   const router = useRouter();
 
   React.useEffect(() => {
-    verify()
     setUser(convertUser())
     if (user.id != 0) {
-      setLoading(false)
+      auth()
       userList()
     }
   }, [user.id != 0])
 
+  const auth = async () => {
+    await api.get('/auth/').then(response => {
+      setLoading(false)
+    }).catch(error => {
+      if (error.response.status === 403) {
+        logout(user.username, true)
+      }
+    })
+  }
+
   const userList = async () => {
 
-    // await api.get(`/admin/user/`).then(response => {
-    //   if (response.data.users) {
-    //     Object.keys(response.data.users).forEach(key => {
-    //       setRow(row => [...row, response.data.users[key]])
-    //     })
-    //   }
-    // })
+    await api.get(`/admin/user/`).then(response => {
+      if (response.data.result) {
+        Object.keys(response.data.result).forEach(key => {
+          setRow(row => [...row, response.data.result[key]])
+        })
+      }
+    })
   }
 
   const handleUserModal = () => {
@@ -72,11 +81,23 @@ export default function Admin() {
     userList()
   }
 
-  const logout = (username: string) => {
+  const logout = (username: string, timedout?: boolean) => {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-    socket.close()
-    sessionStorage.clear()
-    router.push('/login')
+    socket.close();
+    sessionStorage.clear();
+    router.push("/login");
+    const message = timedout == true ? 'Session expired' : `Goodbye ${username}`;
+    toast(message, {
+      position: "top-left",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
+    });
   }
 
   return (
@@ -90,7 +111,7 @@ export default function Admin() {
             aria-describedby="parent-modal-description"
           >
             <Box className="m-4 p-2 d-flex justify-content-center">
-              <AdminUserForm user={selectedUser} />
+              <AdminUserForm user={selectedUser} closeModal={() => handleUserModal()} />
             </Box>
           </Modal>
           <Modal
@@ -98,7 +119,7 @@ export default function Admin() {
             onClose={handleCreateModal}
           >
             <Box className="m-4 p-2 d-flex justify-content-center">
-              <CreateUserForm />
+              <CreateUserForm closeModal={() => handleCreateModal()} />
             </Box>
           </Modal>
           <Bar title={'Administrator settings'} user={user} logout={() => logout(user.first_name)} />

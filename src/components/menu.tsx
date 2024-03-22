@@ -6,12 +6,10 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Slide, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 import { User } from './interface';
-import { ContentCopy } from '@mui/icons-material';
+import { CodeOutlined, ContentCopy } from '@mui/icons-material';
 import Loading from './loading';
 import api from '@/app/api';
 
@@ -21,7 +19,6 @@ interface Component {
 }
 
 const Menu: React.FC<Component> = ({ user, logout }) => {
-  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [loadingCred, setLoadingCred] = React.useState(true);
   const [databaseUser, setDatabaseUser] = React.useState('');
@@ -37,7 +34,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
   };
 
   const handleDatabaseDialog = () => {
-    if(!databaseDialog) {
+    if (!databaseDialog) {
       setLoadingCred(true)
       databaseCredentials()
     }
@@ -76,17 +73,11 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
       setDatabasePwd(response.data[0].password)
       setLoadingCred(false)
     }).catch(error => {
-      console.error(error)
+      if (error.response.status === 403) {
+        logout()
+      }
     })
   }
-
-  // const logout = (username: string) => {
-  //   const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-  //   socket.close()
-  //   sessionStorage.clear()
-  //   api.post('/logout')
-  //   router.push('/login')
-  // }
 
   return (
     <Box className="container">
@@ -142,6 +133,18 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
                 <ListItemText primary="Restart Tomcat" />
               </ListItemButton>
             </ListItem>
+          </Paper>
+          <Paper elevation={1} className="m-2">
+            <Link href="/sql" underline='none' color={'white'}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <CodeOutlined sx={{ color: '#1890ff' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Edit SQL" />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           </Paper>
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>

@@ -2,8 +2,12 @@
 import React from 'react'
 import { EmailOutlined, ManageAccounts, ManageAccountsOutlined, PersonOutline, ToggleOffOutlined, ToggleOnOutlined, Visibility, VisibilityOff } from '@mui/icons-material'
 import { Box, Button, Checkbox, FormControl, IconButton, Input, InputAdornment, InputLabel, Paper } from '@mui/material'
-import axios from 'axios'
 import { Slide, toast } from 'react-toastify'
+import api from '@/app/api'
+
+interface Component {
+  closeModal: () => void
+}
 
 interface Form {
   username: string,
@@ -13,7 +17,7 @@ interface Form {
   is_active: boolean
 }
 
-const CreateUserForm: React.FC = () => {
+const CreateUserForm: React.FC<Component> = ({ closeModal }) => {
   const [form, setForm] = React.useState<Form>({ username: '', password: '', email: '', is_active: true, is_staff: false });
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -34,35 +38,31 @@ const CreateUserForm: React.FC = () => {
       theme: "dark",
       transition: Slide,
     })
-    
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/signup`, form, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+
+    await api.post('/admin/user/create/', form).then(response => {
       setTimeout(() => {
         toast.update(userToast, { render: `Created ${form.username} successfully`, type: "success", isLoading: false, autoClose: 2000 })
       }, 1000);
+      closeModal()
     }).catch(error => {
       toast.update(userToast, { render: `Couldn't create ${form.username}`, type: "error", isLoading: false, autoClose: 4000 })
       Object.keys(error.response.data).forEach(key => {
         const errorMessages: string[] = error.response.data[key];
         errorMessages.forEach(errorMessage => {
-            console.log(`${key}: ${errorMessage}`);
-            toast.warn(`${key}: ${errorMessage}`, {
-              position: "top-left",
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              transition: Slide,
-              });
+          console.log(`${key}: ${errorMessage}`);
+          toast.warn(`${key}: ${errorMessage}`, {
+            position: "top-left",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            transition: Slide,
+          });
         });
-    });
+      });
     })
   }
 

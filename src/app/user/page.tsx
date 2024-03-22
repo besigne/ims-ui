@@ -1,11 +1,12 @@
 'use client'
 import React from 'react'
-import { Box, Paper, Typography } from '@mui/material'
-import { convertUser, verify } from '@/components/functions';
+import { convertUser } from '@/components/functions';
 import { User } from '@/components/interface';
-import Loading from '@/components/loading';
+import { Slide, toast } from 'react-toastify';
 import UserForm from '@/components/userForm';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/loading';
+import { Box } from '@mui/material'
 import Bar from '@/components/bar';
 import api from '../api';
 
@@ -15,19 +16,39 @@ export default function User() {
   const router = useRouter();
 
   React.useEffect(() => {
-    verify()
     setUser(convertUser())
     if (user.id != 0) {
-      setLoading(false)
+      auth()
     }
   }, [user.id != 0])
 
-  const logout = (username: string) => {
+  const auth = async () => {
+    await api.get('/auth/').then(response => {
+      setLoading(false)
+    }).catch(error => {
+      if (error.response.status === 403) {
+        logout(user.username, true)
+      }
+    })
+  }
+
+  const logout = (username: string, timedout?: boolean) => {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-    socket.close()
-    sessionStorage.clear()
-    api.post('/logout')
-    router.push('/login')
+    socket.close();
+    sessionStorage.clear();
+    router.push("/login");
+    const message = timedout == true ? 'Session expired' : `Goodbye ${username}`;
+    toast(message, {
+      position: "top-left",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
+    });
   }
 
   return (

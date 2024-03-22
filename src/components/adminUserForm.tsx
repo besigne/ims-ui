@@ -5,11 +5,12 @@ import { Box, Paper, Checkbox, Button, FormControl, IconButton, Input, InputAdor
 import ManageAccountsOutlined from '@mui/icons-material/ManageAccountsOutlined';
 import { Slide, toast } from 'react-toastify'
 import { User } from './interface'
-import axios from 'axios'
+import api from '@/app/api';
 
 
 interface Component {
-  user: User
+  user: User,
+  closeModal: () => void
 }
 
 interface Form {
@@ -20,7 +21,7 @@ interface Form {
   is_active: boolean
 }
 
-const AdminUserForm: React.FC<Component> = ({ user }) => {
+const AdminUserForm: React.FC<Component> = ({ user, closeModal }) => {
   const [form, setForm] = React.useState<Form>({ username: user.username, password: '', email: user.email, is_active: user.is_active, is_staff: user.is_staff });
   const [showPassword, setShowPassword] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -47,13 +48,9 @@ const AdminUserForm: React.FC<Component> = ({ user }) => {
       transition: Slide,
     })
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/edit/${user.id}/`, form, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    await api.put(`/admin/user/update/${user.id}/`, form).then(response => {
       toast.update(userToast, { render: `Saved ${form.username} successfully`, type: "success", isLoading: false, autoClose: 2000 })
+      closeModal()
     }).catch(error => {
       toast.update(userToast, { render: `Couldn't update ${form.username}`, type: "warning", isLoading: false, autoClose: 2000 })
     })
@@ -72,14 +69,10 @@ const AdminUserForm: React.FC<Component> = ({ user }) => {
       transition: Slide,
     })
 
-    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/delete/${user.id}/`, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    await api.delete(`/admin/user/delete/${user.id}/`).then(response => {
       toast.update(userToast, { render: `Deleted ${form.username} successfully`, type: "success", isLoading: false, autoClose: 2000 })
       setOpenDialog(false)
+      closeModal()
     }).catch(error => {
       toast.update(userToast, { render: `Couldn't delete ${form.username}`, type: "warning", isLoading: false, autoClose: 2000 })
     })

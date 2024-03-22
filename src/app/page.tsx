@@ -1,42 +1,59 @@
 'use client'
 import React from 'react'
-import { Box, Button, LinearProgress, Paper, TextField, Typography } from '@mui/material'
+import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 import { CloudUploadOutlined } from '@mui/icons-material';
 import { VisuallyHiddenInput } from '@/components/helper';
-import { convertUser, verify } from '@/components/functions';
+import { convertUser } from '@/components/functions';
 import { Slide, toast } from 'react-toastify';
 import { User } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
-import axios from 'axios';
 import api from './api';
 
 export default function Home() {
   const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
-  const [token, setToken] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [progress, setProgress] = React.useState(0);
   const [streamLog, setStreamLog] = React.useState('');
   const textFieldRef = React.useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   React.useEffect(() => {
-    verify()
     setUser(convertUser())
-    setToken(sessionStorage.getItem('token'))
-
     if (user.id != 0) {
+      auth()
       handleSocket(user.id, user.first_name)
-      setLoading(false)
     }
   }, [user.id != 0])
 
-  const logout = (username: string) => {
+  const auth = async () => {
+    await api.get('/auth/').then(response => {
+      setLoading(false)
+    }).catch(error => {
+      if (error.response.status === 403) {
+        logout(user.username, true)
+      }
+    })
+  }
+
+  const logout = (username: string, timedout?: boolean) => {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-    socket.close()
-    sessionStorage.clear()
-    api.post('/logout')
-    router.push('/login')
+    socket.close();
+    sessionStorage.clear();
+    router.push("/login");
+    const message = timedout == true ? 'Session expired' : `Goodbye ${username}`;
+    toast(message, {
+      position: "top-left",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Slide,
+    });
   }
 
   React.useEffect(() => {
@@ -66,12 +83,7 @@ export default function Home() {
     const formData = new FormData();
     formData.append('file_attachment', file)
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/upload`, formData, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then(response => {
+    await api.post('/upload/', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(response => {
       if (response.status == 201) {
         deploy(filename)
       }
@@ -87,9 +99,9 @@ export default function Home() {
       position: "top-left",
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
+      pauseOnHover: false,
       draggable: true,
-      progress: undefined,
+      progress: progress,
       theme: "dark",
       transition: Slide,
     })
@@ -97,10 +109,12 @@ export default function Home() {
     formData.append('filename', name)
 
     socket.onopen = () => {
+      
     }
 
     socket.onmessage = (event) => {
       const progress = JSON.parse(event.data)
+      setProgress(progress.percentage)
       toast.update(deployToast, { render: `${progress.message}`, isLoading: true, autoClose: 2000 });
     }
 
@@ -108,12 +122,7 @@ export default function Home() {
       toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
     }
 
-    axios.post(`${process.env.NEXT_PUBLIC_API_URL}/deploy`, formData, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    api.post('/deploy/', formData).then(response => {
       socket.close()
     })
   }

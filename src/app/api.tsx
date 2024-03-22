@@ -1,6 +1,5 @@
 'use client'
-import axios, { AxiosError } from "axios";
-import { useRouter } from 'next/router';
+import axios, { AxiosInstance } from "axios";
 
 function getCSRFToken() {
   if (typeof window !== 'undefined') {
@@ -17,7 +16,7 @@ function getCSRFToken() {
   }
 }
 
-export const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: "X-CSRFTOKEN",
@@ -29,22 +28,4 @@ export const api = axios.create({
   }
 })
 
-export async function postData(url: string, data: any,onSuccess: () => void, onError: () => void) {
-  const router = useRouter();
-
-  try {
-    const response = await api.post(url, data);
-    
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
-      if(axiosError.response && axiosError.response.status === 403) {
-        router.push('/login');
-      }
-    }
-  } finally {
-
-  }
-}
-
+export default api 
