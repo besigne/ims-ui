@@ -27,7 +27,7 @@ const Bar: React.FC<Component> = ({title = "", user, logout}) => {
           </Typography>
         </Box>
         <Box className="col-1 ms-auto p-2">
-          <Button variant='text' onClick={handleStatusDrawer} color="info">Menu</Button>
+          <Button variant='text' onClick={handleStatusDrawer}>Menu</Button>
         </Box>
       </Box>
       <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} logout={logout} />

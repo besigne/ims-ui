@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import { GridColDef } from '@mui/x-data-grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import { DeleteForeverOutlined } from '@mui/icons-material';
 
 export const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',

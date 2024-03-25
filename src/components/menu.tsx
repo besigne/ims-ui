@@ -82,14 +82,14 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
   return (
     <Box className="container">
       <Box className="d-flex flex-column">
-        <Link href="/" underline="none" color={'white'}>
+        <Link href="/" underline="none" color="inherit">
           <Paper elevation={2} className="m-2">
             <Typography className="p-3">Integration Management System</Typography>
           </Paper>
         </Link>
         <List className="p-3">
           <Paper elevation={1} className="m-2">
-            <Link href="/user" underline="none" color={'white'}>
+            <Link href="/user" underline="none" color="inherit">
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -102,7 +102,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
           </Paper>
           {user.is_staff ?
             <Paper elevation={1} className="m-2">
-              <Link href="/admin" underline="none" color={'white'}>
+              <Link href="/admin" underline="none" color="inherit">
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>

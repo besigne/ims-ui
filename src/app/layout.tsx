@@ -6,10 +6,9 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ThemeProvider } from "@mui/material/styles";
-// import { CookiesProvider } from "next-client-cookies/server";
 import ToastProvider from "./toaster";
 import "./globals.css";
-import { darkTheme } from "./theme";
+import { darkTheme, lightTheme } from "./theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ThemeProvider theme={darkTheme}>
+      {/* <ThemeProvider theme={lightTheme}> */}
         <body className={inter.className}>
           {/* <CookiesProvider> */}
             <ToastProvider>

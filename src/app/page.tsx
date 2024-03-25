@@ -12,7 +12,7 @@ import Bar from '@/components/bar';
 import api from './api';
 
 export default function Home() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '' })
+  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
   const [loading, setLoading] = React.useState(true);
   const [progress, setProgress] = React.useState(0);
   const [streamLog, setStreamLog] = React.useState('');
@@ -31,15 +31,14 @@ export default function Home() {
     await api.get('/auth/').then(response => {
       setLoading(false)
     }).catch(error => {
-      if (error.response.status === 403) {
-        logout(user.username, true)
-      }
+      logout(user.username, true)
     })
   }
 
   const logout = (username: string, timedout?: boolean) => {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
     socket.close();
+    api.get("/logout/")
     sessionStorage.clear();
     router.push("/login");
     const message = timedout == true ? 'Session expired' : `Goodbye ${username}`;
@@ -109,7 +108,7 @@ export default function Home() {
     formData.append('filename', name)
 
     socket.onopen = () => {
-      
+
     }
 
     socket.onmessage = (event) => {

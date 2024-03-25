@@ -25,8 +25,8 @@ interface UserData {
 }
 
 export default function Admin() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '' })
-  const [selectedUser, setSelectedUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '' });
+  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' })
+  const [selectedUser, setSelectedUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' });
   const [loading, setLoading] = React.useState(true);
   const [row, setRow] = React.useState<UserData[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -45,9 +45,7 @@ export default function Admin() {
     await api.get('/auth/').then(response => {
       setLoading(false)
     }).catch(error => {
-      if (error.response.status === 403) {
-        logout(user.username, true)
-      }
+      logout(user.username, true)
     })
   }
 
@@ -84,6 +82,7 @@ export default function Admin() {
   const logout = (username: string, timedout?: boolean) => {
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
     socket.close();
+    api.get("/logout/")
     sessionStorage.clear();
     router.push("/login");
     const message = timedout == true ? 'Session expired' : `Goodbye ${username}`;

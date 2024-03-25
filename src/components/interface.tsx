@@ -6,5 +6,6 @@ export interface User {
   is_staff: boolean,
   is_active: boolean,
   last_login: string,
-  date_joined: string
+  date_joined: string,
+  container_port: string
 }

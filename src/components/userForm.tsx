@@ -2,9 +2,9 @@
 import React from 'react'
 import { User } from './interface'
 import { Box, FormControl, InputLabel, Paper, Input, InputAdornment, IconButton, Button } from '@mui/material'
-import { EmailOutlined, ManageAccounts, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
-import axios from 'axios'
+import { EmailOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import { Slide, toast } from 'react-toastify'
+import api from '@/app/api'
 
 interface Component {
   user: User
@@ -38,12 +38,7 @@ const UserForm: React.FC<Component> = ({ user }) => {
       transition: Slide,
     })
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/${user.first_name}/${user.id}/`, form, {
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
+    await api.put(`/${user.first_name}/${user.id}/`, form).then(response => {
       setTimeout(() => {
         toast.update(userToast, { render: `Saved ${user.first_name} successfully`, type: "success", isLoading: false, autoClose: 2000 })
       }, 1000);
@@ -107,7 +102,7 @@ const UserForm: React.FC<Component> = ({ user }) => {
           />
         </FormControl>
         <Box className="d-flex p-2 justify-content-center align-items-center">
-          <Button onClick={handleSubmit}>Save Changes</Button>
+          <Button color="success" onClick={handleSubmit}>Save Changes</Button>
         </Box>
       </Box>
     </Paper>

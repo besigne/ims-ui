@@ -12,7 +12,7 @@ const SQLCodeEditor: React.FC<SQLCodeEditorProps> = ({ defaultValue, onChange })
 
 
   return (
-    <Box sx={{height: '600px'}}>
+    <Box sx={{ height: '600px' }}>
       <Editor
         defaultLanguage="sql"
         defaultValue={defaultValue}
@@ -21,17 +21,14 @@ const SQLCodeEditor: React.FC<SQLCodeEditorProps> = ({ defaultValue, onChange })
         options={{
           formatOnPaste: true,
           formatOnType: true,
-          minimap: { enabled: false },
+          // minimap: { enabled: false },
           hideCursorInOverviewRuler: true,
           overviewRulerBorder: false,
           scrollbar: {
-            vertical:"hidden",
+            vertical: "hidden",
             horizontal: "hidden",
             handleMouseWheel: true,
-        },
-        }}
-        onMount={(editor, monaco) => {
-          editorRef.current = editor;
+          },
         }}
       />
     </Box>

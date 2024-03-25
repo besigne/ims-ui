@@ -103,7 +103,7 @@ export default function Login() {
                       />
                     </FormControl>
                     <ButtonGroup className="col-12 ms-auto p-2 justify-content-center align-items-center">
-                      <Button type='submit' color='success'>Login</Button>
+                      <Button type='submit'>Login</Button>
                     </ButtonGroup>
                   </Box>
                 </Box>
