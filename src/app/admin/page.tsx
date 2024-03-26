@@ -46,6 +46,7 @@ export default function Admin() {
       setLoading(false)
     }).catch(error => {
       logout(user.username, true)
+      window.location.reload
     })
   }
 
@@ -122,41 +123,39 @@ export default function Admin() {
             </Box>
           </Modal>
           <Bar title={'Administrator settings'} user={user} logout={() => logout(user.first_name)} />
-          <Box className="m-4 p-2 d-flex justify-content-center">
-            <Paper className='col-9 d-flex justify-content-center align-items-center'>
-              <DataGrid
-                rows={row}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 }
-                  }
-                }}
-                pageSizeOptions={[5, 10]}
-                onCellDoubleClick={handleUserModal}
-                onCellClick={(e) => handleUser(e)}
-                showCellVerticalBorder={false}
-                rowSelection={false}
-                slots={{
-                  footer: () => (
-                    <>
-                      <Box className="d-flex align-items-center">
-                        <Box className="col p-2">
-                          <Button
-                            onClick={handleCreateModal}
-                            color="success"
-                            startIcon={<PersonAddOutlined />}>
-                            New User
-                          </Button>
-                        </Box>
-                        <GridPagination className="col" />
+          <Paper className='m-4 p-2 d-flex justify-content-center align-items-center'>
+            <DataGrid
+              rows={row}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 }
+                }
+              }}
+              pageSizeOptions={[5, 10]}
+              onCellDoubleClick={handleUserModal}
+              onCellClick={(e) => handleUser(e)}
+              showCellVerticalBorder={false}
+              rowSelection={false}
+              slots={{
+                footer: () => (
+                  <>
+                    <Box className="d-flex align-items-center">
+                      <Box className="col p-2">
+                        <Button
+                          onClick={handleCreateModal}
+                          color="success"
+                          startIcon={<PersonAddOutlined />}>
+                          New User
+                        </Button>
                       </Box>
-                    </>
-                  )
-                }}
-              />
-            </Paper>
-          </Box>
+                      <GridPagination className="col" />
+                    </Box>
+                  </>
+                )
+              }}
+            />
+          </Paper>
         </Box>
         :
         <Loading />

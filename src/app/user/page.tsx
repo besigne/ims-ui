@@ -26,9 +26,8 @@ export default function User() {
     await api.get('/auth/').then(response => {
       setLoading(false)
     }).catch(error => {
-      if (error.response.status === 403) {
-        logout(user.username, true)
-      }
+      logout(user.username, true)
+      window.location.reload
     })
   }
 

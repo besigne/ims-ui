@@ -12,6 +12,7 @@ import { User } from './interface';
 import { CodeOutlined, ContentCopy } from '@mui/icons-material';
 import Loading from './loading';
 import api from '@/app/api';
+import DockerFilled from '@/icons/docker';
 
 interface Component {
   user: User,
@@ -93,7 +94,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <PersonOutlineOutlinedIcon sx={{ color: '#1890ff' }} />
+                    <PersonOutlineOutlinedIcon color="primary" />
                   </ListItemIcon>
                   <ListItemText primary={user.username} />
                 </ListItemButton>
@@ -106,9 +107,23 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <ManageAccountsOutlinedIcon sx={{ color: '#1890ff' }} />
+                      <ManageAccountsOutlinedIcon color="primary" />
                     </ListItemIcon>
                     <ListItemText primary="Administrator" />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </Paper>
+            : null}
+          {user.is_staff ?
+            <Paper elevation={1} className="m-2">
+              <Link href="/docker" underline="none" color="inherit">
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <DockerFilled color="#1890ff" />
+                    </ListItemIcon>
+                    <ListItemText primary="Docker" />
                   </ListItemButton>
                 </ListItem>
               </Link>
@@ -118,7 +133,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             <ListItem disablePadding>
               <ListItemButton disabled={true}>
                 <ListItemIcon>
-                  <UploadOutlinedIcon sx={{ color: '#1890ff' }} />
+                  <UploadOutlinedIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="Deploy" />
               </ListItemButton>
@@ -128,7 +143,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             <ListItem disablePadding>
               <ListItemButton onClick={docker}>
                 <ListItemIcon>
-                  <RestartAltOutlinedIcon sx={{ color: '#1890ff' }} />
+                  <RestartAltOutlinedIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="Restart Tomcat" />
               </ListItemButton>
@@ -139,7 +154,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <CodeOutlined sx={{ color: '#1890ff' }} />
+                    <CodeOutlined color="primary" />
                   </ListItemIcon>
                   <ListItemText primary="Edit SQL" />
                 </ListItemButton>
@@ -150,7 +165,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             <ListItem disablePadding>
               <ListItemButton onClick={handleDatabaseDialog}>
                 <ListItemIcon>
-                  <StorageOutlinedIcon sx={{ color: '#1890ff' }} />
+                  <StorageOutlinedIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="Database" />
               </ListItemButton>
@@ -160,7 +175,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <HistoryOutlinedIcon sx={{ color: '#1890ff' }} />
+                  <HistoryOutlinedIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="History" />
               </ListItemButton>
@@ -170,7 +185,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             <ListItem disablePadding>
               <ListItemButton onClick={handleClickOpen}>
                 <ListItemIcon>
-                  <LogoutOutlinedIcon sx={{ color: '#1890ff' }} />
+                  <LogoutOutlinedIcon color="primary" />
                 </ListItemIcon>
                 <ListItemText primary="Logout" />
               </ListItemButton>

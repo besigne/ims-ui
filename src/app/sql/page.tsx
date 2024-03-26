@@ -41,6 +41,7 @@ export default function Sql() {
       setLoading(false)
     }).catch(error => {
       logout(user.username, true)
+      window.location.reload
     })
   }
 

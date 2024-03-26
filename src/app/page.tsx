@@ -66,6 +66,9 @@ export default function Home() {
 
     tomcatStreamLogReader.onmessage = (event) => {
       const data = JSON.parse(event.data)
+      if(data.full_log) {
+        setStreamLog(stream => stream + data.full_log)
+      }
       if (data.line && typeof (data.line) == 'string') {
         setStreamLog(stream => stream + data.line)
       }

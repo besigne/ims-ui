@@ -2,6 +2,8 @@ import { styled } from '@mui/material/styles';
 import { GridColDef } from '@mui/x-data-grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import { Button } from '@mui/material';
+import { Circle } from '@mui/icons-material';
 
 export const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -14,13 +16,6 @@ export const VisuallyHiddenInput = styled('input')({
   whiteSpace: 'nowrap',
   width: 1,
 });
-
-interface Column {
-  id: 'username' | 'email' | 'date_joined' | 'last_login';
-  label: string;
-  flex?: number;
-  align?: 'right';
-}
 
 export const columns: readonly GridColDef[] = [
   { field: 'username', headerName: 'Username', sortable: false, flex: 3, disableColumnMenu: true },
@@ -75,4 +70,56 @@ export const columns: readonly GridColDef[] = [
     flex: 3,
     disableColumnMenu: true
   }
+]
+
+export const dockerColumns: readonly GridColDef[] = [
+  { field: 'id', headerName: 'Container ID', sortable: false, flex: 1, disableColumnMenu: true },
+  { field: 'name', headerName: 'Name', sortable: false, flex: 5, disableColumnMenu: true },
+  {
+    field: 'status',
+    headerName: 'Status',
+    sortable: false,
+    flex: 1,
+    disableColumnMenu: true,
+    headerAlign: 'center',
+    align: 'center',
+    renderCell: (params) => {
+      if (params.value === "exited") {
+        return <Circle sx={{ color: '#f44336' }} />
+      } else {
+        return <Circle sx={{ color: '#4caf50' }} />
+      }
+    }
+  },
+  {
+    field: 'actions',
+    headerName: 'Actions',
+    sortable: false,
+    flex: 1,
+    headerAlign: 'center',
+    align: 'center',
+    disableColumnMenu: true,
+    renderCell: (params) => {
+      if (params.row.status === "exited") {
+        return (
+          <Button
+            variant="text"
+            color="success"
+          >
+            Start
+          </Button>
+        )
+      } else {
+        return (
+          <Button
+            variant="text"
+            color="error"
+          >
+            Stop
+          </Button>
+        )
+      }
+    },
+  }
+
 ]
