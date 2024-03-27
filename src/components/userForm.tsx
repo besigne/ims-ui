@@ -11,9 +11,9 @@ interface Component {
 }
 
 interface Form {
-  username: string,
-  password: string,
-  email: string,
+  username: string;
+  password: string;
+  email: string;
 }
 
 const UserForm: React.FC<Component> = ({ user }) => {

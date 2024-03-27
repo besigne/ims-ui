@@ -9,7 +9,7 @@ export const convertUser = () => {
       return user;
     }
   }
-  const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: ''  }
+  const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
   return user;
 }
 
@@ -18,7 +18,7 @@ export const convertGridUser = (cell: any) => {
     const user: User = cell.row as User;
     return user;
   } else {
-    const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: ''  }
+    const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
     return user;
   }
 }

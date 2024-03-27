@@ -121,5 +121,4 @@ export const dockerColumns: readonly GridColDef[] = [
       }
     },
   }
-
 ]

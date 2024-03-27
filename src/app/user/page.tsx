@@ -26,14 +26,13 @@ export default function User() {
     await api.get('/auth/').then(response => {
       setLoading(false)
     }).catch(error => {
+      console.error(error)
       logout(user.username, true)
       window.location.reload
     })
   }
 
   const logout = (username: string, timedout?: boolean) => {
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-    socket.close();
     api.get("/logout/")
     sessionStorage.clear();
     router.push("/login");

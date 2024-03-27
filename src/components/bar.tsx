@@ -10,7 +10,7 @@ interface Component {
   logout: () => void,
 }
 
-const Bar: React.FC<Component> = ({title = "", user, logout}) => {
+const Bar: React.FC<Component> = ({ title = "", user, logout }) => {
   const [statusDrawer, setStatusDrawer] = React.useState(false);
 
   const handleStatusDrawer = () => {
@@ -18,12 +18,12 @@ const Bar: React.FC<Component> = ({title = "", user, logout}) => {
   }
   return (
     <>
-    <Box className="d-flex">
+      <Box className="d-flex align-items-center">
         <Box className="col-1 ms-auto p-2">
         </Box>
-        <Box className="col m-2 p-2 d-flex justify-content-center"  sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)', borderRadius: '5px'}}>
+        <Box className="col m-2 p-2 d-flex justify-content-center" sx={{ backgroundColor: 'rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
           <Typography color={'white'}>
-            {title}  
+            {title}
           </Typography>
         </Box>
         <Box className="col-1 ms-auto p-2">

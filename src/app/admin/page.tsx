@@ -45,6 +45,7 @@ export default function Admin() {
     await api.get('/auth/').then(response => {
       setLoading(false)
     }).catch(error => {
+      console.error(error)
       logout(user.username, true)
       window.location.reload
     })
@@ -58,6 +59,8 @@ export default function Admin() {
           setRow(row => [...row, response.data.result[key]])
         })
       }
+    }).catch(error => {
+      console.error(error)
     })
   }
 
@@ -81,8 +84,6 @@ export default function Admin() {
   }
 
   const logout = (username: string, timedout?: boolean) => {
-    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}${username}/`)
-    socket.close();
     api.get("/logout/")
     sessionStorage.clear();
     router.push("/login");

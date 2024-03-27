@@ -1,18 +1,19 @@
 'use client'
 import React from 'react'
-import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Divider } from '@mui/material'
+import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Link, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Divider, Accordion, AccordionSummary, MenuItem, Modal } from '@mui/material'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import UploadOutlinedIcon from '@mui/icons-material/UploadOutlined';
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { Slide, toast } from 'react-toastify';
-import { User } from './interface';
 import { CodeOutlined, ContentCopy } from '@mui/icons-material';
+import { Slide, toast } from 'react-toastify';
+import DockerFilled from '@/icons/docker';
+import { User } from './interface';
 import Loading from './loading';
 import api from '@/app/api';
-import DockerFilled from '@/icons/docker';
+import { VersionSideMenu } from './sidemenu';
 
 interface Component {
   user: User,
@@ -20,18 +21,19 @@ interface Component {
 }
 
 const Menu: React.FC<Component> = ({ user, logout }) => {
-  const [open, setOpen] = React.useState(false);
+  const [isLogginOut, setIsLogginOut] = React.useState(false);
   const [loadingCred, setLoadingCred] = React.useState(true);
   const [databaseUser, setDatabaseUser] = React.useState('');
   const [databasePwd, setDatabasePwd] = React.useState('');
   const [databaseDialog, setDatabaseDialog] = React.useState(false);
+  const [versionDrawer, setVersionDrawer] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleVersionDrawer = () => {
+    setVersionDrawer(!versionDrawer)
+  }
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClickLogout = () => {
+    setIsLogginOut(!isLogginOut);
   };
 
   const handleDatabaseDialog = () => {
@@ -131,11 +133,11 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
             : null}
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
-              <ListItemButton disabled={true}>
+              <ListItemButton onClick={handleVersionDrawer}>
                 <ListItemIcon>
                   <UploadOutlinedIcon color="primary" />
                 </ListItemIcon>
-                <ListItemText primary="Deploy" />
+                <ListItemText primary="Versions" />
               </ListItemButton>
             </ListItem>
           </Paper>
@@ -183,7 +185,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
           </Paper> */}
           <Paper elevation={1} className="m-2">
             <ListItem disablePadding>
-              <ListItemButton onClick={handleClickOpen}>
+              <ListItemButton onClick={handleClickLogout}>
                 <ListItemIcon>
                   <LogoutOutlinedIcon color="primary" />
                 </ListItemIcon>
@@ -194,8 +196,8 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
         </List>
       </Box>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={isLogginOut}
+        onClose={handleClickLogout}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -208,7 +210,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleClickLogout}>No</Button>
           <Button onClick={logout} autoFocus>
             Yes
           </Button>
@@ -249,6 +251,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <VersionSideMenu open={versionDrawer} handleChange={handleVersionDrawer} user={user} logout={logout} />
     </Box>
   )
 }
