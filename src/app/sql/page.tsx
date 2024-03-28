@@ -31,7 +31,7 @@ export default function Sql() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      auth()
+      setLoading(false)
       fetchData()
     }
   }, [user.id != 0])
@@ -131,6 +131,7 @@ export default function Sql() {
       fetchData()
     }).catch(error => {
       console.error(error)
+      auth()
     })
   }
 

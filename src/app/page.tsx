@@ -22,7 +22,7 @@ export default function Home() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      auth()
+      setLoading(false)
       handleSocket(user.id, user.first_name)
     }
   }, [user.id != 0])

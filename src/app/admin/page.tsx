@@ -36,8 +36,8 @@ export default function Admin() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      auth()
       userList()
+      setLoading(false)
     }
   }, [user.id != 0])
 

@@ -18,7 +18,7 @@ export default function User() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      auth()
+      setLoading(false)
     }
   }, [user.id != 0])
 

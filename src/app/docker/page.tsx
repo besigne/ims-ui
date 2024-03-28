@@ -28,7 +28,7 @@ export default function Docker() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      auth()
+      setLoading(false);
       fetchContainerList()
     }
   }, [user.id != 0])
