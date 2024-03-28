@@ -5,14 +5,14 @@ import { CloudUploadOutlined } from '@mui/icons-material';
 import { VisuallyHiddenInput } from '@/components/helper';
 import { convertUser } from '@/components/functions';
 import { Slide, toast } from 'react-toastify';
-import { User } from '@/components/interface';
+import { UserInterface } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
 import api from './api';
 
 export default function Home() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
+  const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
   const [loading, setLoading] = React.useState(true);
   const [progress, setProgress] = React.useState(0);
   const [streamLog, setStreamLog] = React.useState('');

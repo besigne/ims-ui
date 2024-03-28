@@ -4,12 +4,12 @@ import { EmailOutlined, ManageAccounts, PersonOutline, ToggleOffOutlined, Toggle
 import { Box, Paper, Checkbox, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
 import ManageAccountsOutlined from '@mui/icons-material/ManageAccountsOutlined';
 import { Slide, toast } from 'react-toastify'
-import { User } from './interface'
+import { UserInterface } from './interface'
 import api from '@/app/api';
 
 
 interface Component {
-  user: User,
+  user: UserInterface,
   closeModal: () => void
 }
 

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { User } from '@/components/interface';
+import { UserInterface } from '@/components/interface';
 import { convertUser } from '@/components/functions';
 import { dockerColumns } from '@/components/helper';
 import { Slide, toast } from 'react-toastify';
@@ -19,7 +19,7 @@ interface Containers {
 }
 
 export default function Docker() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' });
+  const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' });
   const [loading, setLoading] = React.useState(true);
   const [containers, setContainers] = React.useState<Containers[]>([]);
   const [containersLoading, setContainersLoading] = React.useState(false);

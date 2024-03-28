@@ -5,7 +5,7 @@ import { CustomTabPanel, allyProps } from '@/components/sqlTab';
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Paper, Tab, Tabs, Typography } from '@mui/material';
 import SQLCodeEditor from '@/components/codeEditor';
 import { FastRewindOutlined, SaveOutlined } from '@mui/icons-material';
-import { User } from '@/components/interface';
+import { UserInterface } from '@/components/interface';
 import { Slide, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
@@ -18,7 +18,7 @@ interface FileSelect {
 }
 
 export default function Sql() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
+  const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
   const [loading, setLoading] = React.useState(true);
   const [dataLoading, setDataLoading] = React.useState(true);
   const [dataSQL, setDataSQL] = React.useState('');

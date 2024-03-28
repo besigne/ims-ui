@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { User } from './interface'
+import { UserInterface } from './interface'
 import { Box, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from '@mui/material';
 import api from '@/app/api';
 import Loading from './loading';
@@ -8,7 +8,7 @@ import { AttachFileOutlined } from '@mui/icons-material';
 import { Slide, toast } from 'react-toastify';
 
 interface Component {
-  user: User;
+  user: UserInterface;
 }
 
 interface FileList {

@@ -2,11 +2,11 @@
 import React from 'react'
 import SideMenu from '@/components/sidemenu';
 import { Box, Button, Typography } from '@mui/material'
-import { User } from './interface';
+import { UserInterface } from './interface';
 
 interface Component {
   title: string,
-  user: User,
+  user: UserInterface,
   logout: () => void,
 }
 

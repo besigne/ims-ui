@@ -1,13 +1,13 @@
 'use client'
 import React from 'react'
-import { User } from './interface'
+import { UserInterface } from './interface'
 import { Box, FormControl, InputLabel, Paper, Input, InputAdornment, IconButton, Button } from '@mui/material'
 import { EmailOutlined, PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material'
 import { Slide, toast } from 'react-toastify'
 import api from '@/app/api'
 
 interface Component {
-  user: User
+  user: UserInterface
 }
 
 interface Form {

@@ -10,13 +10,13 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { CodeOutlined, ContentCopy } from '@mui/icons-material';
 import { Slide, toast } from 'react-toastify';
 import DockerFilled from '@/icons/docker';
-import { User } from './interface';
+import { UserInterface } from './interface';
 import Loading from './loading';
 import api from '@/app/api';
 import { VersionSideMenu } from './sidemenu';
 
 interface Component {
-  user: User,
+  user: UserInterface,
   logout: () => void
 }
 

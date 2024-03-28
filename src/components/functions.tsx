@@ -1,30 +1,30 @@
-import { User } from './interface';
+import { UserInterface } from './interface';
 
 export const convertUser = () => {
   const stored = sessionStorage.getItem('user');
   if (stored) {
-    const storedUser: Partial<User> = JSON.parse(stored);
+    const storedUser: Partial<UserInterface> = JSON.parse(stored);
     if (validateUser(storedUser)) {
-      const user: User = storedUser as User;
+      const user: UserInterface = storedUser as UserInterface;
       return user;
     }
   }
-  const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
+  const user: UserInterface = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
   return user;
 }
 
 export const convertGridUser = (cell: any) => {
   if (validateGridUser(cell.row)) {
-    const user: User = cell.row as User;
+    const user: UserInterface = cell.row as UserInterface;
     return user;
   } else {
-    const user: User = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
+    const user: UserInterface = { id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' }
     return user;
   }
 }
 
 
-function validateUser(obj: any): obj is User {
+function validateUser(obj: any): obj is UserInterface {
   return (
     typeof obj.id === 'number' &&
     typeof obj.username === 'string' &&
@@ -38,7 +38,7 @@ function validateUser(obj: any): obj is User {
   )
 }
 
-function validateGridUser(obj: any): obj is User {
+function validateGridUser(obj: any): obj is UserInterface {
   return (
     typeof obj.username === 'string' &&
     typeof obj.email === 'string' &&

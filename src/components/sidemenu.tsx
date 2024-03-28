@@ -2,11 +2,11 @@
 import React from 'react'
 import { Drawer } from "@mui/material"
 import Menu from '@/components/menu';
-import { User } from './interface';
+import { UserInterface } from './interface';
 import VersionMenu from './versionMenu';
 
 interface Component {
-  user: User,
+  user: UserInterface,
   open: boolean
   handleChange: () => void,
   logout: () => void

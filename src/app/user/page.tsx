@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { convertUser } from '@/components/functions';
-import { User } from '@/components/interface';
+import { UserInterface } from '@/components/interface';
 import { Slide, toast } from 'react-toastify';
 import UserForm from '@/components/userForm';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ import Bar from '@/components/bar';
 import api from '../api';
 
 export default function User() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
+  const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 

@@ -7,7 +7,7 @@ import CreateUserForm from '@/components/createUserForm';
 import { PersonAddOutlined } from '@mui/icons-material';
 import AdminUserForm from '@/components/adminUserForm';
 import { columns } from '@/components/helper';
-import { User } from '@/components/interface';
+import { UserInterface } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
@@ -25,8 +25,8 @@ interface UserData {
 }
 
 export default function Admin() {
-  const [user, setUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' })
-  const [selectedUser, setSelectedUser] = React.useState<User>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' });
+  const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' })
+  const [selectedUser, setSelectedUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', is_staff: false, email: '', is_active: false, last_login: '', date_joined: '', container_port: '' });
   const [loading, setLoading] = React.useState(true);
   const [row, setRow] = React.useState<UserData[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);

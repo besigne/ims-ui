@@ -1,0 +1,7 @@
+services:
+  web:
+    image: ims-docker
+    container_name: ims-frontend
+    restart: always
+    ports:
+      - "3000:3000"
