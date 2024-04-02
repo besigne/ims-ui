@@ -1,7 +1,11 @@
 services:
-  web:
-    image: ims-docker
-    container_name: ims-frontend
+  nextjs:
+    image: ims
+    container_name: ims
     restart: always
-    ports:
-      - "3000:3000"
+    volumes:
+      - /usr/share/ims:/ims/static
+networks:
+  default:
+    external: true
+    name: proxy
