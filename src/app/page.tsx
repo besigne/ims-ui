@@ -24,6 +24,7 @@ export default function Home() {
     if (user.id != 0) {
       setLoading(false)
       handleSocket(user.id, user.first_name)
+      auth()
     }
   }, [user.id != 0])
 

@@ -30,6 +30,7 @@ export default function Docker() {
     if (user.id != 0) {
       setLoading(false);
       fetchContainerList()
+      auth()
     }
   }, [user.id != 0])
 

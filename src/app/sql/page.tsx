@@ -33,6 +33,7 @@ export default function Sql() {
     if (user.id != 0) {
       setLoading(false)
       fetchData()
+      auth()
     }
   }, [user.id != 0])
 

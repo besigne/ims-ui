@@ -38,6 +38,7 @@ export default function Admin() {
     if (user.id != 0) {
       userList()
       setLoading(false)
+      auth()
     }
   }, [user.id != 0])
 

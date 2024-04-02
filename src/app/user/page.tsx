@@ -19,6 +19,7 @@ export default function User() {
     setUser(convertUser())
     if (user.id != 0) {
       setLoading(false)
+      auth()
     }
   }, [user.id != 0])
 
