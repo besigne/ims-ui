@@ -8,9 +8,10 @@ interface Component {
   title: string,
   user: UserInterface,
   logout: () => void,
+  token: string
 }
 
-const Bar: React.FC<Component> = ({ title = "", user, logout }) => {
+const Bar: React.FC<Component> = ({ title = "", user, logout, token }) => {
   const [statusDrawer, setStatusDrawer] = React.useState(false);
 
   const handleStatusDrawer = () => {
@@ -30,7 +31,7 @@ const Bar: React.FC<Component> = ({ title = "", user, logout }) => {
           <Button variant='text' onClick={handleStatusDrawer}>Menu</Button>
         </Box>
       </Box>
-      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} logout={logout} />
+      <SideMenu open={statusDrawer} handleChange={handleStatusDrawer} user={user} logout={logout} token={token} />
     </>
   )
 }

@@ -9,10 +9,11 @@ interface Component {
   user: UserInterface,
   open: boolean
   handleChange: () => void,
-  logout: () => void
+  logout: () => void,
+  token: string,
 }
 
-const SideMenu: React.FC<Component> = ({ open, handleChange, user, logout }) => {
+const SideMenu: React.FC<Component> = ({ open, handleChange, user, logout, token }) => {
 
   return (
     <Drawer
@@ -20,7 +21,7 @@ const SideMenu: React.FC<Component> = ({ open, handleChange, user, logout }) => 
         open={open}
         onClose={handleChange}
       >
-        <Menu user={user}  logout={logout} />
+        <Menu user={user}  logout={logout} token={token} />
     </Drawer>
   )
 }

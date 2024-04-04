@@ -1,6 +1,14 @@
 FROM node:20 AS base
+LABEL authors="besigne"
+
+ENV CONTAINER_NAME ims
 
 WORKDIR /ims
+
+RUN if npm install --global pm2; then \
+  : ; \
+  else echo "pm2 failed" && exit 1; \
+  fi
 
 COPY package.json package-lock.json* ./
 
@@ -18,4 +26,4 @@ RUN \
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "npm", "--", "start"]

@@ -1,8 +1,9 @@
 Dockerfile
 .dockerignore
-docker-composer.yml
+docker-compose.yml
 node_modules
 npm-debug.log
 README.md
 .next
 .git
+nginx/

@@ -4,7 +4,7 @@ import { Box, Button, ButtonGroup, FormControl, IconButton, Input, InputAdornmen
 import { PersonOutline, Visibility, VisibilityOff } from '@mui/icons-material';
 import { Slide, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import api from '../api';
+import login from '../api';
 
 interface LoginForm {
   username: string;
@@ -24,7 +24,7 @@ export default function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await api.post('/login/', formData)
+    await login.post('/login/', formData)
       .then(response => {
         if (response.status == 200) {
           sessionStorage.setItem('user', JSON.stringify(response.data.user))

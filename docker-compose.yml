@@ -1,13 +1,11 @@
+name: ims
+
 services:
-  nextjs:
-    image: ims
+  ims:
+    build: ./
     container_name: ims
-    restart: unless-stopped
+  nginx:
+    build: ./nginx
+    container_name: nginx
     ports:
-      - '3000:3000'
-    volumes:
-      - /usr/share/ims:/ims/static
-networks:
-  default:
-    external: true
-    name: proxy
+      - "80:80"

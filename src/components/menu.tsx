@@ -17,10 +17,11 @@ import { VersionSideMenu } from './sidemenu';
 
 interface Component {
   user: UserInterface,
-  logout: () => void
+  token: string,
+  logout: () => void,
 }
 
-const Menu: React.FC<Component> = ({ user, logout }) => {
+const Menu: React.FC<Component> = ({ user, logout, token }) => {
   const [isLogginOut, setIsLogginOut] = React.useState(false);
   const [loadingCred, setLoadingCred] = React.useState(true);
   const [databaseUser, setDatabaseUser] = React.useState('');
@@ -62,7 +63,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
 
     const token = sessionStorage.getItem('token')
 
-    await api.post('/restart/').then(response => {
+    await api.post('/restart/', {}, {headers: {'X-CRSFToken': token}}).then(response => {
       toast.update(tomcatToast, { render: `${response.data.message}`, type: 'success', isLoading: false, autoClose: 2000 });
     }).catch(error => {
       toast.update(tomcatToast, { render: 'Couldn\'t restart tomcat', type: 'warning', isLoading: false, autoClose: 2000 });
@@ -251,7 +252,7 @@ const Menu: React.FC<Component> = ({ user, logout }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <VersionSideMenu open={versionDrawer} handleChange={handleVersionDrawer} user={user} logout={logout} />
+      <VersionSideMenu open={versionDrawer} handleChange={handleVersionDrawer} user={user} logout={logout} token={token} />
     </Box>
   )
 }
