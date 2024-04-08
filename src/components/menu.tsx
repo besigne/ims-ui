@@ -9,19 +9,19 @@ import StorageOutlinedIcon from '@mui/icons-material/StorageOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { CodeOutlined, ContentCopy } from '@mui/icons-material';
 import { Slide, toast } from 'react-toastify';
-import DockerFilled from '@/icons/docker';
-import { UserInterface } from './interface';
-import Loading from './loading';
-import api from '@/app/api';
 import { VersionSideMenu } from './sidemenu';
+import { UserInterface } from './interface';
+import DockerFilled from '@/icons/docker';
+import Loading from './loading';
+import Cookies from 'js-cookie';
+import api from '@/app/api';
 
 interface Component {
   user: UserInterface,
-  token: string,
   logout: () => void,
 }
 
-const Menu: React.FC<Component> = ({ user, logout, token }) => {
+const Menu: React.FC<Component> = ({ user, logout }) => {
   const [isLogginOut, setIsLogginOut] = React.useState(false);
   const [loadingCred, setLoadingCred] = React.useState(true);
   const [databaseUser, setDatabaseUser] = React.useState('');
@@ -60,10 +60,7 @@ const Menu: React.FC<Component> = ({ user, logout, token }) => {
       theme: "dark",
       transition: Slide,
     })
-
-    const token = sessionStorage.getItem('token')
-
-    await api.post('/restart/', {}, {headers: {'X-CRSFToken': token}}).then(response => {
+    await api.post('/restart/').then(response => {
       toast.update(tomcatToast, { render: `${response.data.message}`, type: 'success', isLoading: false, autoClose: 2000 });
     }).catch(error => {
       toast.update(tomcatToast, { render: 'Couldn\'t restart tomcat', type: 'warning', isLoading: false, autoClose: 2000 });
@@ -71,7 +68,6 @@ const Menu: React.FC<Component> = ({ user, logout, token }) => {
   }
 
   const databaseCredentials = async () => {
-
     await api.get('/credentials/').then(response => {
       setDatabaseUser(response.data[0].user)
       setDatabasePwd(response.data[0].password)
@@ -252,7 +248,7 @@ const Menu: React.FC<Component> = ({ user, logout, token }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <VersionSideMenu open={versionDrawer} handleChange={handleVersionDrawer} user={user} logout={logout} token={token} />
+      <VersionSideMenu open={versionDrawer} handleChange={handleVersionDrawer} user={user} logout={logout} />
     </Box>
   )
 }

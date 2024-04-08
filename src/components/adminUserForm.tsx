@@ -36,7 +36,6 @@ const AdminUserForm: React.FC<Component> = ({ user, closeModal }) => {
   }
 
   const handleSubmit = async () => {
-    const token = sessionStorage.getItem('token');
     const userToast = toast.loading('saving', {
       position: "top-left",
       hideProgressBar: false,

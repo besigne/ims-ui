@@ -11,7 +11,7 @@ import { UserInterface } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
-import api from '../api';
+import api from '../../app/api';
 import { Slide, toast } from 'react-toastify';
 
 interface UserData {
@@ -36,8 +36,8 @@ export default function Admin() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
+      fetchToken()
       userList()
-      setLoading(false)
       auth()
     }
   }, [user.id != 0])
@@ -63,6 +63,23 @@ export default function Admin() {
     }).catch(error => {
       console.error(error)
     })
+  }
+
+  const fetchToken = () => {
+    let token = ''
+    while (token = '') {
+      if (typeof window !== 'undefined') {
+        if (typeof sessionStorage !== 'undefined') {
+          const cookies = document.cookie.split(';');
+          for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+              sessionStorage.setItem('token', value)
+            }
+          }
+        }
+      }
+    }
   }
 
   const handleUserModal = () => {

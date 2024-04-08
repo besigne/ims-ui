@@ -26,7 +26,6 @@ const UserForm: React.FC<Component> = ({ user }) => {
   };
 
   const handleSubmit = async () => {
-    const token = sessionStorage.getItem('token')
     const userToast = toast.loading('saving', {
       position: "top-left",
       hideProgressBar: false,

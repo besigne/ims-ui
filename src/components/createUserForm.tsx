@@ -6,7 +6,7 @@ import { Slide, toast } from 'react-toastify'
 import api from '@/app/api'
 
 interface Component {
-  closeModal: () => void
+  closeModal: () => void,
 }
 
 interface Form {
@@ -27,7 +27,6 @@ const CreateUserForm: React.FC<Component> = ({ closeModal }) => {
   };
 
   const handleSubmit = async () => {
-    const token = sessionStorage.getItem('token');
     const userToast = toast.loading(`creating ${form.username}`, {
       position: "top-left",
       hideProgressBar: false,

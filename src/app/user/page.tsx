@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import { Box } from '@mui/material'
 import Bar from '@/components/bar';
-import api from '../api';
+import api from '../../app/api';
 
 export default function User() {
   const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
@@ -18,7 +18,6 @@ export default function User() {
   React.useEffect(() => {
     setUser(convertUser())
     if (user.id != 0) {
-      setLoading(false)
       auth()
     }
   }, [user.id != 0])

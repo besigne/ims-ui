@@ -9,12 +9,12 @@ import { UserInterface } from '@/components/interface';
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/loading';
 import Bar from '@/components/bar';
-import api from './api';
+import api from '../app/api';
+import { getCookie, hasCookie } from 'cookies-next';
 
 export default function Home() {
   const [user, setUser] = React.useState<UserInterface>({ id: 0, username: '', first_name: '', email: '', is_staff: false, is_active: false, last_login: '', date_joined: '', container_port: '' })
   const [loading, setLoading] = React.useState(true);
-  const [token, setToken] = React.useState('');
   const [progress, setProgress] = React.useState(0);
   const [streamLog, setStreamLog] = React.useState('');
   const textFieldRef = React.useRef<HTMLInputElement>(null);
@@ -22,39 +22,20 @@ export default function Home() {
 
   React.useEffect(() => {
     setUser(convertUser())
-    fetchToken()
     if (user.id != 0) {
-      setLoading(false)
       handleSocket(user.id, user.first_name)
       auth()
     }
-  }, [user.id != 0, token != ''])
+  }, [user.id != 0])
 
   const auth = async () => {
     await api.get('/auth/').then(response => {
+      setLoading(false)
     }).catch(error => {
       console.error(error)
       logout(user.username, true)
       window.location.reload
     })
-  }
-
-  const fetchToken = () => {
-    let token = ''
-    while (token = '') {
-      if (typeof window !== 'undefined') {
-        if (typeof document !== 'undefined') {
-          const cookies = document.cookie.split(';');
-          for (let cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'csrftoken') {
-              token = value;
-            }
-          }
-        }
-      }
-    }
-    setToken(token)
   }
 
   const logout = (username: string, timedout?: boolean) => {
@@ -144,7 +125,7 @@ export default function Home() {
       toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
     }
 
-    api.post('/deploy/', formData, { headers: { 'X-CRSFToken': token } }).then(response => {
+    api.post('/deploy/', formData).then(response => {
       socket.close()
     }).catch(error => {
       console.error(error)
@@ -155,7 +136,7 @@ export default function Home() {
     <>
       {!loading ?
         <Box className="container">
-          <Bar title={'Integration Management System'} user={user} logout={() => logout(user.first_name)} token={token} />
+          <Bar title={'Integration Management System'} user={user} logout={() => logout(user.first_name)} />
           <Box className="m-2 p-2 d-flex justify-content-center">
             <Box className="col-6 d-flex justify-content-center">
               <Paper elevation={3}>

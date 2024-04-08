@@ -27,11 +27,9 @@ export default function RootLayout({
       <ThemeProvider theme={darkTheme}>
       {/* <ThemeProvider theme={lightTheme}> */}
         <body className={inter.className}>
-          {/* <CookiesProvider> */}
             <ToastProvider>
               {children}
             </ToastProvider>
-          {/* </CookiesProvider> */}
         </body>
       </ThemeProvider>
     </html>
