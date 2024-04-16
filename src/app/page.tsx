@@ -24,8 +24,8 @@ export default function Home() {
     setUser(convertUser())
     if (user.id != 0) {
       handleSocket(user.id, user.first_name)
-      auth()
     }
+    auth()
   }, [user.id != 0])
 
   const auth = async () => {

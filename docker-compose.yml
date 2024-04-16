@@ -4,8 +4,5 @@ services:
   ims:
     build: ./
     container_name: ims
-  nginx:
-    build: ./nginx
-    container_name: nginx
     ports:
-      - "80:80"
+    - 3001:3000
