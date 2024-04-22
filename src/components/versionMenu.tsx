@@ -70,15 +70,17 @@ const VersionMenu: React.FC<Component> = ({ user }) => {
     }
 
     socket.onclose = () => {
-      toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
       setDeploying(false)
     }
 
     api.post('/deploy/', formData).then(response => {
-      socket.close()
+      toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
     }).catch(error => {
       console.error(error)
+      toast.update(deployToast, { render: "finish", type: "error", isLoading: false, autoClose: 2000 })
     })
+
+    socket.close()
   }
 
   return (
