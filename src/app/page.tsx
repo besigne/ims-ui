@@ -122,10 +122,10 @@ export default function Home() {
     }
 
     api.post('/deploy/', formData).then(response => {
-      toast.update(deployToast, { render: "finish", type: "success", isLoading: false, autoClose: 2000 });
+      toast.update(deployToast, { render: "Done", type: "success", isLoading: false, autoClose: 2000 });
     }).catch(error => {
       console.error(error)
-      toast.update(deployToast, { render: "finish", type: "error", isLoading: false, autoClose: 2000 })
+      toast.update(deployToast, { render: "Failed", type: "error", isLoading: false, autoClose: 2000 })
     })
 
     socket.close()
